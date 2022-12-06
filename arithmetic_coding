@@ -1,0 +1,64 @@
+def real_encode(dict_freq,data):
+  dict_code = {}
+  M = len(dict_freq)
+  q = 0
+  X = list(dict_freq.keys())
+  P = list(dict_freq.values())
+  n = len(data)
+  Q= {}
+  # Q.append(q)
+  for  i in range(M):
+    q+= P[i]
+    Q.update({X[i]:q})
+   
+  q_m = n
+  k = 16
+  R4 = pow(2,k-2)
+  R2 = R4*2
+  R34 = R2 + R4
+  R = 2*R2
+
+  Low = 0
+  High = R-1
+  btf = 0
+  y = []
+
+  for i in range(len(data)):
+      print(y)
+      Range = High - Low +1
+      High = Low + math.trunc((Range*Q[data[i]]+1)/q_m)-1
+      Low = Low + math.trunc((Range*Q[data[i]])/q_m) 
+      while True:
+        if High<R2:
+          y.append(0)
+          for i in range(btf):
+            y.append(1)
+          btf = 0
+          High = High*2+1
+          Low = Low*2
+        else:
+          if Low>=R2:
+             y.append(1)
+             for i in range(btf):
+               y.append(0)
+             btf = 0
+             High = High*2-R+1
+             Low = Low*2 - R
+          else:
+            if Low>=R4 and High<R34:
+              High = 2*High-R2+1
+              Low = 2*Low -R2
+              btf = btf+1
+            else:
+              break
+
+    
+  if Low <R4:
+    y.append(0)
+    for i in range(btf+1):
+               y.append(1)
+  else:
+    y.append(1)
+    for i in range(btf+1):
+               y.append(0)
+  return y
